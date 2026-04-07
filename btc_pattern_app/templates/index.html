@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BTC Pattern Detector</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .price-card { min-width: 120px; }
+        .chart-height { height: 600px; }
+        .pattern-link { cursor: pointer; }
+    </style>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -15,15 +20,15 @@
             <p class="text-muted">Detección automática de patrones chartistas</p>
             
             <div class="d-flex justify-content-center gap-3 mt-3 flex-wrap">
-                <div class="card text-center py-2 px-3" style="min-width: 120px;">
+                <div class="card text-center py-2 px-3 price-card">
                     <small class="text-muted">Precio Actual</small>
                     <strong id="currentPrice" class="fs-5">--</strong>
                 </div>
-                <div class="card text-center py-2 px-3" style="min-width: 120px;">
+                <div class="card text-center py-2 px-3 price-card">
                     <small class="text-muted">Cambio 24h</small>
                     <strong id="priceChange" class="fs-5">--</strong>
                 </div>
-                <div class="card text-center py-2 px-3" style="min-width: 120px;">
+                <div class="card text-center py-2 px-3 price-card">
                     <small class="text-muted">Volumen 24h</small>
                     <strong id="volume24h" class="fs-5">--</strong>
                 </div>
@@ -40,10 +45,10 @@
             <button class="btn btn-outline-primary" data-tf="1d">1D</button>
         </div>
         
-        <div class="alert alert-danger" id="errorMessage" style="display: none;"></div>
+        <div class="alert alert-danger d-none" id="errorMessage"></div>
         
         <div class="card mb-4">
-            <div id="chart" style="height: 600px;">
+            <div id="chart" class="chart-height">
                 <div class="d-flex align-items-center justify-content-center h-100 text-muted">
                     <div>Cargando gráfico...</div>
                 </div>
@@ -63,7 +68,7 @@
     <script>
         let currentTimeframe = '1h';
         let updateInterval = null;
-        const UPDATE_TIME = 10000;
+        const UPDATE_TIME = 60000; // 1 minute
         
         const directionIcons = {
             'bullish': '📈',
@@ -112,9 +117,9 @@
             const errorEl = document.getElementById('errorMessage');
             if (message) {
                 errorEl.textContent = message;
-                errorEl.style.display = 'block';
+                errorEl.classList.remove('d-none');
             } else {
-                errorEl.style.display = 'none';
+                errorEl.classList.add('d-none');
             }
         }
         
@@ -213,10 +218,9 @@
                     <li class="list-group-item ${borderClass}">
                         <div class="d-flex justify-content-between align-items-start flex-wrap">
                             <div>
-                                <strong class="pattern-name" 
+                                <strong class="pattern-name pattern-link" 
                                         data-bs-toggle="tooltip" 
-                                        data-bs-title="${pattern.help || ''}"
-                                        style="cursor: pointer;">${icon} ${patternName}</strong>
+                                        data-bs-title="${pattern.help || ''}">${icon} ${patternName}</strong>
                                 <div class="text-muted small">${pattern.description}</div>
                             </div>
                             <div class="text-end">
