@@ -30,6 +30,14 @@ def find_valleys(data, order=3):
     return np.array(valleys)
 
 
+def format_time_range(df, indices):
+    if len(indices) < 2:
+        return ""
+    start_time = df.index[indices[0]]
+    end_time = df.index[indices[-1]]
+    return f"{start_time.strftime('%d/%m/%Y %I:%M %p')} - {end_time.strftime('%d/%m/%Y %I:%M %p')}"
+
+
 class PatternDetector:
     def __init__(self, window=5, order=3):
         self.window = window
@@ -75,7 +83,8 @@ class ContinuationPatternDetector(PatternDetector):
                 'direction': 'bullish',
                 'confidence': 'medium',
                 'description': 'Patrón de continuación alcista - resistencia horizontal con soporte ascendente',
-                'help': 'El triángulo ascendente tiene resistencia horizontal y soporte ascendente. Generalmente es un patrón alcista que indica que los compradores están ganando fuerza.'
+                'help': 'El triángulo ascendente tiene resistencia horizontal y soporte ascendente. Generalmente es un patrón alcista que indica que los compradores están ganando fuerza.',
+                'time_range': format_time_range(df, list(highs_idx[-4:]) + list(lows_idx[-4:]))
             }
         return None
     
@@ -102,7 +111,8 @@ class ContinuationPatternDetector(PatternDetector):
                     'direction': 'bearish',
                     'confidence': 'medium',
                     'description': 'Patrón de continuación bajista - soporte horizontal con resistencia descendente',
-                    'help': 'El triángulo descendente tiene soporte horizontal y resistencia descendente. Generalmente es un patrón bajista que indica que los vendedores están ganando fuerza.'
+                    'help': 'El triángulo descendente tiene soporte horizontal y resistencia descendente. Generalmente es un patrón bajista que indica que los vendedores están ganando fuerza.',
+                    'time_range': format_time_range(df, list(highs_idx[-4:]) + list(lows_idx[-4:]))
                 }
         return None
     
@@ -128,7 +138,8 @@ class ContinuationPatternDetector(PatternDetector):
                 'direction': 'neutral',
                 'confidence': 'low',
                 'description': 'Patrón de consolidación - dirección unsure',
-                'help': 'El triángulo simétrico está formado por soporte ascendente y resistencia descendente. Es un patrón de consolidación que puede romper en cualquier dirección.'
+                'help': 'El triángulo simétrico está formado por soporte ascendente y resistencia descendente. Es un patrón de consolidación que puede romper en cualquier dirección.',
+                'time_range': format_time_range(df, list(highs_idx[-4:]) + list(lows_idx[-4:]))
             }
         return None
     
@@ -152,7 +163,8 @@ class ContinuationPatternDetector(PatternDetector):
                     'direction': 'bullish',
                     'confidence': 'medium',
                     'description': 'Patrón de continuación alcista - bandera',
-                    'help': 'La bandera es un patrón de continuación que se forma después de un movimiento fuerte (asta). El precio se consolida en un canal estrecho antes de continuar en la misma dirección.'
+                    'help': 'La bandera es un patrón de continuación que se forma después de un movimiento fuerte (asta). El precio se consolida en un canal estrecho antes de continuar en la misma dirección.',
+                    'time_range': format_time_range(df, list(highs_idx[-4:]) + list(lows_idx[-4:]))
                 }
             
             first_move_bearish = recent_lows[1] - recent_lows[0]
@@ -165,7 +177,8 @@ class ContinuationPatternDetector(PatternDetector):
                     'direction': 'bearish',
                     'confidence': 'medium',
                     'description': 'Patrón de continuación bajista - bandera',
-                    'help': 'La bandera bajista es un patrón de continuación que se forma después de un movimiento bajista fuerte. El precio se consolida en un canal estrecho antes de continuar bajando.'
+                    'help': 'La bandera bajista es un patrón de continuación que se forma después de un movimiento bajista fuerte. El precio se consolida en un canal estrecho antes de continuar bajando.',
+                    'time_range': format_time_range(df, list(highs_idx[-4:]) + list(lows_idx[-4:]))
                 }
         return None
     
@@ -191,7 +204,8 @@ class ContinuationPatternDetector(PatternDetector):
                 'direction': direction,
                 'confidence': 'medium',
                 'description': f'Patrón de continuación {direction} - banderín',
-                'help': 'El banderín es un patrón de continuación similar a la bandera, pero con líneas de soporte y resistencia convergentes. Se forma después de un movimiento fuerte.'
+                'help': 'El banderín es un patrón de continuación similar a la bandera, pero con líneas de soporte y resistencia convergentes. Se forma después de un movimiento fuerte.',
+                'time_range': format_time_range(df, list(highs_idx[-4:]) + list(lows_idx[-4:]))
             }
         return None
     

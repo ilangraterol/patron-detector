@@ -221,6 +221,7 @@
                                 <strong class="pattern-name pattern-link" 
                                         data-bs-toggle="tooltip" 
                                         data-bs-title="${pattern.help || ''}">${icon} ${patternName}</strong>
+                                ${pattern.time_range ? `<span class="text-info small ms-1">${pattern.time_range}</span>` : ''}
                                 <div class="text-muted small">${pattern.description}</div>
                             </div>
                             <div class="text-end">

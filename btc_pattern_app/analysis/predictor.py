@@ -52,6 +52,7 @@ class PatternPredictor:
                 'help': pattern.get('help', ''),
                 'direction': pattern.get('direction', 'neutral'),
                 'confidence': pattern.get('confidence', 'low'),
+                'time_range': pattern.get('time_range', ''),
                 'direction_icon': self.direction_icons.get(pattern.get('direction'), '➡️')
             }
             analysis['patterns_detail'].append(pattern_info)

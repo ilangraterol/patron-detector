@@ -30,6 +30,14 @@ def find_valleys(data, order=3):
     return np.array(valleys)
 
 
+def format_time_range(df, indices):
+    if len(indices) < 2:
+        return ""
+    start_time = df.index[indices[0]]
+    end_time = df.index[indices[-1]]
+    return f"{start_time.strftime('%d/%m/%Y %I:%M %p')} - {end_time.strftime('%d/%m/%Y %I:%M %p')}"
+
+
 class ReversalPatternDetector:
     def __init__(self, window=5, order=3):
         self.window = window
@@ -78,7 +86,8 @@ class ReversalPatternDetector:
                 'direction': 'bearish',
                 'confidence': 'high',
                 'description': 'Patrón de reversión bajista - doble techo',
-                'help': 'El doble techo es un patrón de reversión bajista que se forma cuando el precio alcanza dos máximos similares. Indica que la tendencia alcista podría estar agotándose.'
+                'help': 'El doble techo es un patrón de reversión bajista que se forma cuando el precio alcanza dos máximos similares. Indica que la tendencia alcista podría estar agotándose.',
+                'time_range': format_time_range(df, peaks)
             }
         return None
     
@@ -112,7 +121,8 @@ class ReversalPatternDetector:
                 'direction': 'bullish',
                 'confidence': 'high',
                 'description': 'Patrón de reversión alcista - doble suelo',
-                'help': 'El doble suelo es un patrón de reversión alcista que se forma cuando el precio alcanza dos mínimos similares. Indica que la tendencia bajista podría estar agotándose.'
+                'help': 'El doble suelo es un patrón de reversión alcista que se forma cuando el precio alcanza dos mínimos similares. Indica que la tendencia bajista podría estar agotándose.',
+                'time_range': format_time_range(df, bottoms)
             }
         return None
     
@@ -150,7 +160,8 @@ class ReversalPatternDetector:
                     'direction': 'bearish',
                     'confidence': 'high',
                     'description': 'Patrón de reversión bajista - Hombro Cabeza Hombro',
-                    'help': 'El patrón Hombro-Cabeza-Hombro es un patrón de reversión bajista con tres picos: el del medio (cabeza) es más alto que los otros dos (hombros). Indica el fin de una tendencia alcista.'
+                    'help': 'El patrón Hombro-Cabeza-Hombro es un patrón de reversión bajista con tres picos: el del medio (cabeza) es más alto que los otros dos (hombros). Indica el fin de una tendencia.',
+                    'time_range': format_time_range(df, recent_highs_idx)
                 }
         return None
     
@@ -188,7 +199,8 @@ class ReversalPatternDetector:
                     'direction': 'bullish',
                     'confidence': 'high',
                     'description': 'Patrón de reversión alcista - HCH Invertido',
-                    'help': 'El HCH Invertido es un patrón de reversión alcista con tres mínimos: el del medio (cabeza) es más bajo que los otros dos (hombros). Indica el fin de una tendencia bajista.'
+                    'help': 'El HCH Invertido es un patrón de reversión alcista con tres mínimos: el del medio (cabeza) es más bajo que los otros dos (hombros). Indica el fin de una tendencia bajista.',
+                    'time_range': format_time_range(df, recent_lows_idx)
                 }
         return None
     
@@ -218,7 +230,8 @@ class ReversalPatternDetector:
                 'direction': 'bearish',
                 'confidence': 'high',
                 'description': 'Patrón de reversión bajista - triple techo',
-                'help': 'El triple techo es un patrón de reversión bajista que se forma cuando el precio alcanza tres máximos similares. Es una señal fuerte de que la tendencia alcista podría revertirse.'
+                'help': 'El triple techo es un patrón de reversión bajista que se forma cuando el precio alcanza tres máximos similares. Es una señal fuerte de que la tendencia alcista podría revertirse.',
+                'time_range': format_time_range(df, peaks)
             }
         return None
     
@@ -248,7 +261,8 @@ class ReversalPatternDetector:
                 'direction': 'bullish',
                 'confidence': 'high',
                 'description': 'Patrón de reversión alcista - triple suelo',
-                'help': 'El triple suelo es un patrón de reversión alcista que se forma cuando el precio alcanza tres mínimos similares. Es una señal fuerte de que la tendencia bajista podría revertirse.'
+                'help': 'El triple suelo es un patrón de reversión alcista que se forma cuando el precio alcanza tres mínimos similares. Es una señal fuerte de que la tendencia bajista podría revertirse.',
+                'time_range': format_time_range(df, bottoms)
             }
         return None
     
