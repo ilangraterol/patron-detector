@@ -40,7 +40,11 @@ class PatternPredictor:
             'patterns_detail': []
         }
         
-        for pattern in patterns:
+        sorted_patterns = sorted(patterns, key=lambda p: (
+            {'high': 0, 'medium': 1, 'low': 2}.get(p.get('confidence', 'low'), 3)
+        ))
+        
+        for pattern in sorted_patterns:
             pattern_info = {
                 'type': pattern.get('type', 'unknown'),
                 'name': pattern.get('name', pattern.get('type', 'unknown')),
