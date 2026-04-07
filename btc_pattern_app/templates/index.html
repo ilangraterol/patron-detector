@@ -204,6 +204,11 @@
                 const confidenceClass = pattern.confidence === 'high' ? 'bg-success' : pattern.confidence === 'medium' ? 'bg-warning text-dark' : 'bg-secondary';
                 const patternName = pattern.name || pattern.type;
                 
+                const directionText = pattern.direction === 'bullish' ? 'BULLISH (Alcista)' : pattern.direction === 'bearish' ? 'BEARISH (Bajista)' : 'NEUTRAL (Neutral)';
+                const confidenceText = pattern.confidence === 'high' ? 'HIGH (Alta)' : pattern.confidence === 'medium' ? 'MEDIUM (Media)' : 'LOW (Baja)';
+                const directionHelp = pattern.direction === 'bullish' ? 'El patrón indica una tendencia alcista - el precio podría subir' : pattern.direction === 'bearish' ? 'El patrón indica una tendencia bajista - el precio podría bajar' : 'El patrón no tiene dirección clara';
+                const confidenceHelp = pattern.confidence === 'high' ? 'Alta confianza - el patrón es más fiable' : pattern.confidence === 'medium' ? 'Confianza media - el patrón es moderadamente fiable' : 'Baja confianza - el patrón puede ser menos fiable';
+                
                 html += `
                     <li class="list-group-item ${borderClass}">
                         <div class="d-flex justify-content-between align-items-start flex-wrap">
@@ -215,8 +220,12 @@
                                 <div class="text-muted small">${pattern.description}</div>
                             </div>
                             <div class="text-end">
-                                <span class="badge ${badgeClass}">${pattern.direction.toUpperCase()}</span>
-                                <span class="badge ${confidenceClass} ms-1">${pattern.confidence}</span>
+                                <span class="badge ${badgeClass}" 
+                                      data-bs-toggle="tooltip" 
+                                      data-bs-title="${directionHelp}">${directionText}</span>
+                                <span class="badge ${confidenceClass} ms-1" 
+                                      data-bs-toggle="tooltip" 
+                                      data-bs-title="${confidenceHelp}">${confidenceText}</span>
                             </div>
                         </div>
                     </li>
