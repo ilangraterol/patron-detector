@@ -71,9 +71,11 @@ class ContinuationPatternDetector(PatternDetector):
         if high_slope < 0 and low_slope > 0:
             return {
                 'type': 'triangle_ascending',
+                'name': 'Ascending Triangle (Triángulo Ascendente)',
                 'direction': 'bullish',
                 'confidence': 'medium',
-                'description': 'Patrón de continuación alcista - resistencia horizontal con soporte ascendente'
+                'description': 'Patrón de continuación alcista - resistencia horizontal con soporte ascendente',
+                'help': 'El triángulo ascendente tiene resistencia horizontal y soporte ascendente. Generalmente es un patrón alcista que indica que los compradores están ganando fuerza.'
             }
         return None
     
@@ -96,9 +98,11 @@ class ContinuationPatternDetector(PatternDetector):
             if abs(high_slope) > abs(low_slope):
                 return {
                     'type': 'triangle_descending',
+                    'name': 'Descending Triangle (Triángulo Descendente)',
                     'direction': 'bearish',
                     'confidence': 'medium',
-                    'description': 'Patrón de continuación bajista - soporte horizontal con resistencia descendente'
+                    'description': 'Patrón de continuación bajista - soporte horizontal con resistencia descendente',
+                    'help': 'El triángulo descendente tiene soporte horizontal y resistencia descendente. Generalmente es un patrón bajista que indica que los vendedores están ganando fuerza.'
                 }
         return None
     
@@ -120,9 +124,11 @@ class ContinuationPatternDetector(PatternDetector):
         if high_slope < 0 and low_slope > 0:
             return {
                 'type': 'triangle_symmetric',
+                'name': 'Symmetric Triangle (Triángulo Simétrico)',
                 'direction': 'neutral',
                 'confidence': 'low',
-                'description': 'Patrón de consolidación - dirección unsure'
+                'description': 'Patrón de consolidación - dirección unsure',
+                'help': 'El triángulo simétrico está formado por soporte ascendente y resistencia descendente. Es un patrón de consolidación que puede romper en cualquier dirección.'
             }
         return None
     
@@ -142,9 +148,11 @@ class ContinuationPatternDetector(PatternDetector):
             if first_move > 0 and abs(pullback / first_move) < 0.5:
                 return {
                     'type': 'flag',
+                    'name': 'Flag (Bandera)',
                     'direction': 'bullish',
                     'confidence': 'medium',
-                    'description': 'Patrón de continuación alcista - bandera'
+                    'description': 'Patrón de continuación alcista - bandera',
+                    'help': 'La bandera es un patrón de continuación que se forma después de un movimiento fuerte (asta). El precio se consolida en un canal estrecho antes de continuar en la misma dirección.'
                 }
             
             first_move_bearish = recent_lows[1] - recent_lows[0]
@@ -153,9 +161,11 @@ class ContinuationPatternDetector(PatternDetector):
             if first_move_bearish < 0 and abs(pullback_bearish / first_move_bearish) < 0.5:
                 return {
                     'type': 'flag',
+                    'name': 'Flag (Bandera)',
                     'direction': 'bearish',
                     'confidence': 'medium',
-                    'description': 'Patrón de continuación bajista - bandera'
+                    'description': 'Patrón de continuación bajista - bandera',
+                    'help': 'La bandera bajista es un patrón de continuación que se forma después de un movimiento bajista fuerte. El precio se consolida en un canal estrecho antes de continuar bajando.'
                 }
         return None
     
@@ -177,9 +187,11 @@ class ContinuationPatternDetector(PatternDetector):
             direction = 'bullish' if price_range > 0 else 'bearish'
             return {
                 'type': 'pennant',
+                'name': 'Pennant (Banderín)',
                 'direction': direction,
                 'confidence': 'medium',
-                'description': f'Patrón de continuación {direction} - banderín'
+                'description': f'Patrón de continuación {direction} - banderín',
+                'help': 'El banderín es un patrón de continuación similar a la bandera, pero con líneas de soporte y resistencia convergentes. Se forma después de un movimiento fuerte.'
             }
         return None
     

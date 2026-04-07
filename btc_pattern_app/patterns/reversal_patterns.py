@@ -74,10 +74,11 @@ class ReversalPatternDetector:
         if len(peaks) >= 2:
             return {
                 'type': 'double_top',
+                'name': 'Double Top (Doble Techo)',
                 'direction': 'bearish',
                 'confidence': 'high',
                 'description': 'Patrón de reversión bajista - doble techo',
-                'levels': [df['high'].values[peaks[0]], df['high'].values[peaks[-1]]]
+                'help': 'El doble techo es un patrón de reversión bajista que se forma cuando el precio alcanza dos máximos similares. Indica que la tendencia alcista podría estar agotándose.'
             }
         return None
     
@@ -107,10 +108,11 @@ class ReversalPatternDetector:
         if len(bottoms) >= 2:
             return {
                 'type': 'double_bottom',
+                'name': 'Double Bottom (Doble Suelo)',
                 'direction': 'bullish',
                 'confidence': 'high',
                 'description': 'Patrón de reversión alcista - doble suelo',
-                'levels': [df['low'].values[bottoms[0]], df['low'].values[bottoms[-1]]]
+                'help': 'El doble suelo es un patrón de reversión alcista que se forma cuando el precio alcanza dos mínimos similares. Indica que la tendencia bajista podría estar agotándose.'
             }
         return None
     
@@ -144,9 +146,11 @@ class ReversalPatternDetector:
             if abs(left_shoulder - right_shoulder) / head_height < 0.1:
                 return {
                     'type': 'head_shoulders',
+                    'name': 'Head and Shoulders (Hombro-Cabeza-Hombro)',
                     'direction': 'bearish',
                     'confidence': 'high',
-                    'description': 'Patrón de reversión bajista - Hombro Cabeza Hombro'
+                    'description': 'Patrón de reversión bajista - Hombro Cabeza Hombro',
+                    'help': 'El patrón Hombro-Cabeza-Hombro es un patrón de reversión bajista con tres picos: el del medio (cabeza) es más alto que los otros dos (hombros). Indica el fin de una tendencia alcista.'
                 }
         return None
     
@@ -180,9 +184,11 @@ class ReversalPatternDetector:
             if abs(left_shoulder - right_shoulder) / left_shoulder < 0.1:
                 return {
                     'type': 'inverse_head_shoulders',
+                    'name': 'Inverse Head and Shoulders (HCH Invertido)',
                     'direction': 'bullish',
                     'confidence': 'high',
-                    'description': 'Patrón de reversión alcista - HCH Invertido'
+                    'description': 'Patrón de reversión alcista - HCH Invertido',
+                    'help': 'El HCH Invertido es un patrón de reversión alcista con tres mínimos: el del medio (cabeza) es más bajo que los otros dos (hombros). Indica el fin de una tendencia bajista.'
                 }
         return None
     
@@ -208,9 +214,11 @@ class ReversalPatternDetector:
         if len(peaks) >= 3:
             return {
                 'type': 'triple_top',
+                'name': 'Triple Top (Triple Techo)',
                 'direction': 'bearish',
                 'confidence': 'high',
-                'description': 'Patrón de reversión bajista - triple techo'
+                'description': 'Patrón de reversión bajista - triple techo',
+                'help': 'El triple techo es un patrón de reversión bajista que se forma cuando el precio alcanza tres máximos similares. Es una señal fuerte de que la tendencia alcista podría revertirse.'
             }
         return None
     
@@ -236,9 +244,11 @@ class ReversalPatternDetector:
         if len(bottoms) >= 3:
             return {
                 'type': 'triple_bottom',
+                'name': 'Triple Bottom (Triple Suelo)',
                 'direction': 'bullish',
                 'confidence': 'high',
-                'description': 'Patrón de reversión alcista - triple suelo'
+                'description': 'Patrón de reversión alcista - triple suelo',
+                'help': 'El triple suelo es un patrón de reversión alcista que se forma cuando el precio alcanza tres mínimos similares. Es una señal fuerte de que la tendencia bajista podría revertirse.'
             }
         return None
     

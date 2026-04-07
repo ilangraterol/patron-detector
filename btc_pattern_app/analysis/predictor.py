@@ -43,7 +43,9 @@ class PatternPredictor:
         for pattern in patterns:
             pattern_info = {
                 'type': pattern.get('type', 'unknown'),
+                'name': pattern.get('name', pattern.get('type', 'unknown')),
                 'description': pattern.get('description', ''),
+                'help': pattern.get('help', ''),
                 'direction': pattern.get('direction', 'neutral'),
                 'confidence': pattern.get('confidence', 'low'),
                 'direction_icon': self.direction_icons.get(pattern.get('direction'), '➡️')
