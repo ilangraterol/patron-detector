@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC Pattern Detector - Gráfico en Tiempo Real</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #0f3460;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #e94560;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .price-display {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .price-item {
+            background: #0f3460;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .price-label {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+            margin-bottom: 5px;
+        }
+        
+        .price-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .price-value.bullish {
+            color: #26a69a;
+        }
+        
+        .price-value.bearish {
+            color: #ef5350;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .timeframe-btn {
+            background: #0f3460;
+            border: 2px solid #0f3460;
+            color: #e0e0e0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .timeframe-btn:hover {
+            background: #1a4a7a;
+            border-color: #e94560;
+        }
+        
+        .timeframe-btn.active {
+            background: #e94560;
+            border-color: #e94560;
+            color: white;
+        }
+        
+        .chart-container {
+            background: #0f3460;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        #chart {
+            width: 100%;
+            height: 600px;
+        }
+        
+        .analysis-panel {
+            background: #0f3460;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .analysis-title {
+            color: #e94560;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #1a4a7a;
+            padding-bottom: 10px;
+        }
+        
+        .patterns-list {
+            list-style: none;
+        }
+        
+        .pattern-item {
+            background: #1a1a2e;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #e94560;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .pattern-item.bullish {
+            border-left-color: #26a69a;
+        }
+        
+        .pattern-item.bearish {
+            border-left-color: #ef5350;
+        }
+        
+        .pattern-info {
+            flex: 1;
+        }
+        
+        .pattern-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .pattern-desc {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+        
+        .pattern-direction {
+            text-align: right;
+        }
+        
+        .direction-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .direction-badge.bullish {
+            background: rgba(38, 166, 154, 0.2);
+            color: #26a69a;
+        }
+        
+        .direction-badge.bearish {
+            background: rgba(239, 83, 80, 0.2);
+            color: #ef5350;
+        }
+        
+        .direction-badge.neutral {
+            background: rgba(144, 164, 174, 0.2);
+            color: #90a4ae;
+        }
+        
+        .confidence-badge {
+            font-size: 0.8rem;
+            padding: 3px 10px;
+            border-radius: 10px;
+            margin-left: 10px;
+        }
+        
+        .confidence-badge.high {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .confidence-badge.medium {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .confidence-badge.low {
+            background: #9e9e9e;
+            color: white;
+        }
+        
+        .recommendation-box {
+            background: linear-gradient(135deg, #e94560 0%, #c73e54 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .recommendation-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .recommendation-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #a0a0a0;
+        }
+        
+        .error-message {
+            background: #ef5350;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .price-value {
+                font-size: 1.2rem;
+            }
+            
+            #chart {
+                height: 400px;
+            }
+            
+            .controls {
+                gap: 5px;
+            }
+            
+            .timeframe-btn {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 BTC/USDT Pattern Detector</h1>
+            <p>Detección automática de patrones chartistas en tiempo real</p>
+            
+            <div class="price-display">
+                <div class="price-item">
+                    <div class="price-label">Precio Actual</div>
+                    <div class="price-value" id="currentPrice">--</div>
+                </div>
+                <div class="price-item">
+                    <div class="price-label">Cambio 24h</div>
+                    <div class="price-value" id="priceChange">--</div>
+                </div>
+                <div class="price-item">
+                    <div class="price-label">Volumen 24h</div>
+                    <div class="price-value" id="volume24h">--</div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="controls">
+            <button class="timeframe-btn" data-tf="1m">1m</button>
+            <button class="timeframe-btn" data-tf="5m">5m</button>
+            <button class="timeframe-btn" data-tf="15m">15m</button>
+            <button class="timeframe-btn" data-tf="30m">30m</button>
+            <button class="timeframe-btn active" data-tf="1h">1H</button>
+            <button class="timeframe-btn" data-tf="4h">4H</button>
+            <button class="timeframe-btn" data-tf="1d">1D</button>
+        </div>
+        
+        <div class="error-message" id="errorMessage" style="display: none;"></div>
+        
+        <div class="chart-container">
+            <div id="chart">
+                <div class="loading">Cargando gráfico...</div>
+            </div>
+        </div>
+        
+        <div class="analysis-panel">
+            <h2 class="analysis-title">📈 Análisis de Patrones</h2>
+            <div id="analysisContent">
+                <div class="loading">Analizando patrones...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTimeframe = '1h';
+        let updateInterval = null;
+        const UPDATE_TIME = 10000;
+        
+        const directionIcons = {
+            'bullish': '📈',
+            'bearish': '📉',
+            'neutral': '➡️'
+        };
+        
+        function init() {
+            document.querySelectorAll('.timeframe-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentTimeframe = btn.dataset.tf;
+                    loadData();
+                });
+            });
+            
+            loadData();
+            
+            updateInterval = setInterval(loadData, UPDATE_TIME);
+        }
+        
+        async function loadData() {
+            try {
+                showError(null);
+                
+                const response = await fetch(`/api/data?timeframe=${currentTimeframe}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    showError(data.error);
+                    return;
+                }
+                
+                updatePriceDisplay(data.ticker);
+                renderChart(data.chart);
+                renderAnalysis(data.analysis);
+                
+            } catch (error) {
+                showError('Error al cargar datos: ' + error.message);
+            }
+        }
+        
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            if (message) {
+                errorEl.textContent = message;
+                errorEl.style.display = 'block';
+            } else {
+                errorEl.style.display = 'none';
+            }
+        }
+        
+        function updatePriceDisplay(ticker) {
+            const currentPriceEl = document.getElementById('currentPrice');
+            const priceChangeEl = document.getElementById('priceChange');
+            const volumeEl = document.getElementById('volume24h');
+            
+            if (ticker) {
+                currentPriceEl.textContent = '$' + ticker.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                currentPriceEl.className = 'price-value';
+                
+                const changePercent = ticker.change || 0;
+                const changeClass = changePercent >= 0 ? 'bullish' : 'bearish';
+                const changeSign = changePercent >= 0 ? '+' : '';
+                
+                priceChangeEl.textContent = changeSign + changePercent.toFixed(2) + '%';
+                priceChangeEl.className = 'price-value ' + changeClass;
+                
+                volumeEl.textContent = '$' + (ticker.volume / 1000000).toFixed(2) + 'M';
+            }
+        }
+        
+        function renderChart(chartData) {
+            const chartDiv = document.getElementById('chart');
+            
+            if (!chartData || !chartData.data) {
+                chartDiv.innerHTML = '<div class="loading">Sin datos disponibles</div>';
+                return;
+            }
+            
+            const trace = {
+                x: chartData.data.timestamps,
+                open: chartData.data.open,
+                high: chartData.data.high,
+                low: chartData.data.low,
+                close: chartData.data.close,
+                type: 'candlestick',
+                increasing: {line: {color: '#26a69a'}},
+                decreasing: {line: {color: '#ef5350'}},
+                name: 'BTC/USDT'
+            };
+            
+            const shapes = chartData.shapes || [];
+            const annotations = chartData.annotations || [];
+            
+            const layout = {
+                title: {
+                    text: 'BTC/USDT - Gráfico en Tiempo Real',
+                    font: {size: 20, color: '#e0e0e0'}
+                },
+                template: 'plotly_dark',
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                xaxis: {
+                    title: 'Tiempo',
+                    gridcolor: '#1a1a2e',
+                    zerolinecolor: '#1a1a2e'
+                },
+                yaxis: {
+                    title: 'Precio (USDT)',
+                    gridcolor: '#1a1a2e',
+                    zerolinecolor: '#1a1a2e'
+                },
+                height: 600,
+                margin: {l: 60, r: 60, t: 80, b: 60},
+                shapes: shapes,
+                annotations: annotations
+            };
+            
+            Plotly.newPlot('chart', [trace], layout, {responsive: true});
+        }
+        
+        function renderAnalysis(analysis) {
+            const contentEl = document.getElementById('analysisContent');
+            
+            if (!analysis || analysis.patterns_found === 0) {
+                contentEl.innerHTML = '<div class="loading">No se detectaron patrones</div>';
+                return;
+            }
+            
+            let html = '<ul class="patterns-list">';
+            
+            analysis.patterns_detail.forEach(pattern => {
+                const icon = directionIcons[pattern.direction] || '➡️';
+                html += `
+                    <li class="pattern-item ${pattern.direction}">
+                        <div class="pattern-info">
+                            <div class="pattern-name">${icon} ${pattern.type}</div>
+                            <div class="pattern-desc">${pattern.description}</div>
+                        </div>
+                        <div class="pattern-direction">
+                            <span class="direction-badge ${pattern.direction}">${pattern.direction.toUpperCase()}</span>
+                            <span class="confidence-badge ${pattern.confidence}">${pattern.confidence}</span>
+                        </div>
+                    </li>
+                `;
+            });
+            
+            html += '</ul>';
+            
+            const dirIcon = directionIcons[analysis.direction] || '➡️';
+            html += `
+                <div class="recommendation-box">
+                    <div class="recommendation-title">🎯 Recomendación</div>
+                    <div class="recommendation-text">${dirIcon} ${analysis.recommendation}</div>
+                </div>
+            `;
+            
+            contentEl.innerHTML = html;
+        }
+        
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
